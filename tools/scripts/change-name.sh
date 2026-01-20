@@ -33,12 +33,6 @@ if [[ ! "${GENERIC_PROJECT_CODE}" =~ ^[a-z0-9][a-z0-9-]+$ ]]; then
   die "GENERIC_PROJECT_CODE must be lowercase, alphanumeric, hyphens only"
 fi
 
-# Guard: require clean working tree (only if we're actually inside a git work tree)
-if command -v git >/dev/null 2>&1 && git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  if [[ -n "$(git status --porcelain)" ]]; then
-    die "Working tree is not clean. Commit or stash changes before running."
-  fi
-fi
 
 
 
@@ -59,6 +53,27 @@ echo
 
 echo "Finding files containing GENERIC_ (excluding tools/scripts and build outputs)..."
  
+sed_escape_repl() {
+  # Escape for sed replacement part:
+  # - backslash
+  # - ampersand (which expands to matched text)
+  # - delimiter '|' (we use it below)
+  printf '%s' "$1" | sed -e 's/[\/&|\\]/\\&/g'
+}
+
+R_GITHUBUSER="$(sed_escape_repl "${GENERIC_GITHUBUSER}")"
+R_PROJECT_CODE="$(sed_escape_repl "${GENERIC_PROJECT_CODE}")"
+R_PROJECT_NAME="$(sed_escape_repl "${GENERIC_PROJECT_NAME}")"
+R_PROJECT_DESCRIPTION="$(sed_escape_repl "${GENERIC_PROJECT_DESCRIPTION}")"
+R_PROJECT_VERSION="$(sed_escape_repl "${GENERIC_PROJECT_VERSION}")"
+R_TRIGRAMME="$(sed_escape_repl "${GENERIC_TRIGRAMME}")"
+R_LOGO_PART1="$(sed_escape_repl "${GENERIC_LOGO_PART1}")"
+R_LOGO_PART2="$(sed_escape_repl "${GENERIC_LOGO_PART2}")"
+R_SLOGAN="$(sed_escape_repl "${GENERIC_SLOGAN}")"
+R_HOMEPAGE_URL="$(sed_escape_repl "${GENERIC_PROJECT_HOMEPAGE_URL}")"
+R_SUPPORT_URL="$(sed_escape_repl "${GENERIC_PROJECT_SUPPORT_URL}")"
+
+
 FILES="$(
   find . \
     -path './.git' -prune -o \
@@ -91,17 +106,17 @@ else
   while IFS= read -r f; do
     [[ -f "$f" ]] || continue
     sed -i \
-      -e "s/GENERIC_GITHUBUSER/${GENERIC_GITHUBUSER}/g" \
-      -e "s/GENERIC_PROJECT_CODE/${GENERIC_PROJECT_CODE}/g" \
-      -e "s/GENERIC_PROJECT_NAME/${GENERIC_PROJECT_NAME}/g" \
-      -e "s/GENERIC_PROJECT_DESCRIPTION/${GENERIC_PROJECT_DESCRIPTION}/g" \
-      -e "s#GENERIC_PROJECT_HOMEPAGE_URL#${GENERIC_PROJECT_HOMEPAGE_URL}#g" \
-      -e "s#GENERIC_PROJECT_SUPPORT_URL#${GENERIC_PROJECT_SUPPORT_URL}#g" \
-      -e "s/GENERIC_PROJECT_VERSION/${GENERIC_PROJECT_VERSION}/g" \
-      -e "s/GENERIC_TRIGRAMME/${GENERIC_TRIGRAMME}/g" \
-      -e "s/GENERIC_LOGO_PART1/${GENERIC_LOGO_PART1}/g" \
-      -e "s/GENERIC_LOGO_PART2/${GENERIC_LOGO_PART2}/g" \
-      -e "s/GENERIC_SLOGAN/${GENERIC_SLOGAN}/g" \
+      -e "s|GENERIC_GITHUBUSER|${R_GITHUBUSER}|g" \
+      -e "s|GENERIC_PROJECT_CODE|${R_PROJECT_CODE}|g" \
+      -e "s|GENERIC_PROJECT_NAME|${R_PROJECT_NAME}|g" \
+      -e "s|GENERIC_PROJECT_DESCRIPTION|${R_PROJECT_DESCRIPTION}|g" \
+      -e "s|GENERIC_PROJECT_HOMEPAGE_URL|${R_HOMEPAGE_URL}|g" \
+      -e "s|GENERIC_PROJECT_SUPPORT_URL|${R_SUPPORT_URL}|g" \
+      -e "s|GENERIC_PROJECT_VERSION|${R_PROJECT_VERSION}|g" \
+      -e "s|GENERIC_TRIGRAMME|${R_TRIGRAMME}|g" \
+      -e "s|GENERIC_LOGO_PART1|${R_LOGO_PART1}|g" \
+      -e "s|GENERIC_LOGO_PART2|${R_LOGO_PART2}|g" \
+      -e "s|GENERIC_SLOGAN|${R_SLOGAN}|g" \
       "$f"
   done <<< "${FILES}"
 fi
