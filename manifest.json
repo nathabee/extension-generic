@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "GENERIC_PROJECT_NAME",
+  "version": "0.0.0",
+  "description": "GENERIC_PROJECT_DESCRIPTION",
+  "author": "GENERIC_GITHUBUSER",
+  "homepage_url": "GENERIC_PROJECT_HOMEPAGE_URL",
+  "icons": {
+    "16": "assets/icon-16.png",
+    "32": "assets/icon-32.png",
+    "48": "assets/icon-48.png",
+    "128": "assets/icon-128.png"
+  },
+  "permissions": [
+    "storage",
+    "sidePanel"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "side_panel": {
+    "default_path": "panel/panel.html"
+  },
+  "action": {
+    "default_title": "GENERIC_PROJECT_NAME"
+  }
+}
