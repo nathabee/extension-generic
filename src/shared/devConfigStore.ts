@@ -2,7 +2,7 @@
 import { storageGet, storageSet } from "./platform/storage";
 import { clampInt } from "../panel/app/format";
 
-const STORAGE_KEY = "template.devConfig";
+const STORAGE_KEY = "GENERIC_PROJECT_CODE.devConfig";
 
 export type DevConfig = {
   traceConsole: boolean;

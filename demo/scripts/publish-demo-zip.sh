@@ -14,7 +14,7 @@ need gh
 ver="$(tr -d ' \t\r\n' < VERSION)"
 tag="v${ver}"
 
-ZIP="release/chatgpt-organizer-demo-${ver}.zip"
+ZIP="release/GENERIC_PROJECT_CODE-demo-${ver}.zip"
 [[ -f "$ZIP" ]] || die "Missing $ZIP. Run: ./demo/scripts/build-demo-zip.sh"
 
 # clean tree guard (same style as your extension script)

@@ -54,6 +54,7 @@ Create a **new empty repository** on GitHub named `<project_code>`
 git clone https://github.com/nathabee/extension-generic.git
 mv extension-generic <project_code>
 cd <project_code>
+rm -rf .git
 ```
 
 ---
@@ -61,13 +62,16 @@ cd <project_code>
 ### 3. Point the repository to the new GitHub project
 
 This step is **mandatory** to avoid pushing back into the template repository.
+Always verify that `origin` points to your new repository before pushing.
+
 
 ```bash
-git remote set-url origin git@github.com:<yourgithubuser>/<project_code>.git
-git remote -v
-```
 
-Always verify that `origin` points to your new repository before pushing.
+git remote add origin git@github.com:<youruser>>/<project_code>.git
+git branch -M main
+git remote -v   # MUST show your new repo before any push
+
+```
 
 ---
 
@@ -109,6 +113,7 @@ After this step, the project is no longer “generic”.
 ### 6. Commit and push
 
 ```bash
+
 git add -A
 git commit -m "chore(init): initialize project from template"
 git push -u origin main
